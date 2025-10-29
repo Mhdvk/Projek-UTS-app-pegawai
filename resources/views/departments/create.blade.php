@@ -14,8 +14,8 @@
                 <input type="text" name="nama_departemen" id="nama_departemen" required>
             </div>
             <div class="form-actions">
-                <button type="submit">Simpan</button>
-                <a href="{{ route('departments.index') }}">Batal</a>
+                <button type="submit" class="btn-submit">Simpan</button>
+                <button type="button" class="btn-cancel" onclick="window.location='{{ route('departments.index') }}'">Batal</button>
             </div>
         </form>
     </div>
