@@ -3,53 +3,57 @@
 @section('title', 'Edit Data Gaji')
 
 @section('content')
-    @vite('resources/css/salaries-edit.css')
+<div class="page-header">
+    <h1 class="page-title">Edit Data Gaji Pegawai</h1>
+</div>
 
-    <div class="form-container">
-        <h2>Edit Data Gaji</h2>
-
+<div class="app-card form-container">
+    <div class="app-card-body">
         <form action="{{ route('salaries.update', $salary->id) }}" method="POST">
             @csrf
             @method('PUT')
 
-            <div class="form-group">
-                <label>Karyawan:</label>
-                <select name="karyawan_id" required>
-                    <option value="">-- Pilih Karyawan --</option>
-                    @foreach($employees as $emp)
-                        <option value="{{ $emp->id }}" {{ $salary->karyawan_id == $emp->id ? 'selected' : '' }}>
-                            {{ $emp->nama_lengkap }}
-                        </option>
-                    @endforeach
-                </select>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="karyawan_id" class="form-label form-label-required">Karyawan</label>
+                    <select name="karyawan_id" id="karyawan_id" class="form-control" required>
+                        <option value="">-- Pilih Karyawan --</option>
+                        @foreach($employees as $emp)
+                            <option value="{{ $emp->id }}" {{ $salary->karyawan_id == $emp->id ? 'selected' : '' }}>
+                                {{ $emp->nama_lengkap }} ({{ $emp->position->nama_jabatan ?? 'Tanpa Jabatan' }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bulan" class="form-label form-label-required">Periode Bulan</label>
+                    <input type="text" id="bulan" name="bulan" class="form-control" value="{{ old('bulan', $salary->bulan) }}" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="gaji_pokok" class="form-label form-label-required">Gaji Pokok (Rp)</label>
+                    <input type="number" name="gaji_pokok" id="gaji_pokok" class="form-control" value="{{ old('gaji_pokok', $salary->gaji_pokok) }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tunjangan" class="form-label form-label-required">Tunjangan (Rp)</label>
+                    <input type="number" step="1000" id="tunjangan" name="tunjangan" class="form-control" value="{{ old('tunjangan', $salary->tunjangan) }}" required>
+                </div>
             </div>
 
             <div class="form-group">
-                <label>Bulan</label>
-                <input type="text" name="bulan" value="{{ $salary->bulan }}" required>
-            </div>
-
-            <div class="form-group">
-                <label>Gaji Pokok</label>
-                <input type="text" name="gaji_pokok" value="{{ $salary->gaji_pokok }}" required>
-            </div>
-
-            <div class="form-group">
-                <label>Tunjangan</label>
-                <input type="text" name="tunjangan" value="{{ $salary->tunjangan }}" required>
-            </div>
-
-            <div class="form-group">
-                <label>Potongan</label>
-                <input type="text" name="potongan" value="{{ $salary->potongan }}">
+                <label for="potongan" class="form-label">Potongan (Rp)</label>
+                <input type="number" step="1000" id="potongan" name="potongan" class="form-control" value="{{ old('potongan', $salary->potongan) }}">
             </div>
 
             <div class="form-actions">
-                <button type="submit">Update</button>
-                <a href="{{ route('salaries.index') }}">
-                    <button type="button" class="cancel-btn">Kembali</button>
-                </a>
+                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                <a href="{{ route('salaries.index') }}" class="btn btn-secondary">Batal</a>
             </div>
         </form>
     </div>
+</div>
 @endsection

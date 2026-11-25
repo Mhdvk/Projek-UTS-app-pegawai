@@ -1,20 +1,21 @@
 @extends('master')
 
-@section('title', 'Edit Absensi')
+@section('title', 'Edit Data Absensi')
 
 @section('content')
-    @vite('resources/css/attendance-edit.css')
-    <link rel="stylesheet" href="{{ asset('resources/css/attendance.css') }}">
-    <div class="form-container">
-        <h2>Edit Data Absensi</h2>
+<div class="page-header">
+    <h1 class="page-title">Edit Data Absensi</h1>
+</div>
 
+<div class="app-card form-container">
+    <div class="app-card-body">
         <form action="{{ route('attendance.update', $attendance->id) }}" method="POST">
             @csrf
             @method('PUT')
 
             <div class="form-group">
-                <label>Karyawan</label>
-                <select name="karyawan_id">
+                <label for="karyawan_id" class="form-label form-label-required">Karyawan</label>
+                <select name="karyawan_id" id="karyawan_id" class="form-control" required>
                     @foreach ($employees as $emp)
                         <option value="{{ $emp->id }}" {{ $attendance->karyawan_id == $emp->id ? 'selected' : '' }}>
                             {{ $emp->nama_lengkap }}
@@ -23,38 +24,41 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label>Tanggal</label>
-                <input type="date" name="tanggal" value="{{ $attendance->tanggal }}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="tanggal" class="form-label form-label-required">Tanggal</label>
+                    <input type="date" id="tanggal" name="tanggal" class="form-control" value="{{ old('tanggal', $attendance->tanggal) }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="status_absensi" class="form-label form-label-required">Status Kehadiran</label>
+                    <select id="status_absensi" name="status_absensi" class="form-control" required>
+                        @foreach (['hadir', 'izin', 'sakit', 'alpha'] as $status)
+                            <option value="{{ $status }}" {{ old('status_absensi', $attendance->status_absensi) == $status ? 'selected' : '' }}>
+                                {{ ucfirst($status) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>Waktu Masuk</label>
-                <input type="time" name="waktu_masuk" value="{{ $attendance->waktu_masuk }}">
-            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="waktu_masuk" class="form-label">Waktu Masuk</label>
+                    <input type="time" id="waktu_masuk" name="waktu_masuk" class="form-control" value="{{ old('waktu_masuk', $attendance->waktu_masuk) }}">
+                </div>
 
-            <div class="form-group">
-                <label>Waktu Keluar</label>
-                <input type="time" name="waktu_keluar" value="{{ $attendance->waktu_keluar }}">
-            </div>
-
-            <div class="form-group">
-                <label>Status Absensi</label>
-                <select name="status_absensi">
-                    @foreach (['hadir', 'izin', 'sakit', 'alpha'] as $status)
-                        <option value="{{ $status }}" {{ $attendance->status_absensi == $status ? 'selected' : '' }}>
-                            {{ ucfirst($status) }}
-                        </option>
-                    @endforeach
-                </select>
+                <div class="form-group">
+                    <label for="waktu_keluar" class="form-label">Waktu Keluar</label>
+                    <input type="time" id="waktu_keluar" name="waktu_keluar" class="form-control" value="{{ old('waktu_keluar', $attendance->waktu_keluar) }}">
+                </div>
             </div>
 
             <div class="form-actions">
-                <button type="submit">Update</button>
-                <button type="button" onclick="window.location='{{ route('attendance.index') }}'">
-                    Batal
-                </button>
+                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                <a href="{{ route('attendance.index') }}" class="btn btn-secondary">Batal</a>
             </div>
         </form>
     </div>
+</div>
 @endsection

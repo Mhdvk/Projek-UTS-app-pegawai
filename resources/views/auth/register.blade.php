@@ -1,112 +1,65 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="id">
 <head>
-    <title>Register</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .register-box {
-            background: white;
-            width: 380px;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            outline: none;
-            transition: 0.2s;
-        }
-
-        input:focus {
-            border-color: #6c9bcf;
-            box-shadow: 0 0 4px rgba(108, 155, 207, 0.5);
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background-color: #218838;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrasi Akun - App Pegawai</title>
+    @vite('resources/css/master.css')
 </head>
+<body class="auth-page">
+    <div class="auth-card">
+        <div class="auth-brand">
+            <h1>Registrasi Akun</h1>
+            <p>Buat akun baru untuk akses sistem pegawai</p>
+        </div>
 
-<body>
-    <div class="register-box">
-        <h2>Registrasi Pegawai</h2>
+        @if(session('success'))
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
 
-        {{-- Tampilkan semua error --}}
-        @if ($errors->any())
-            <div style="background-color:#f8d7da;color:#721c24;padding:10px;border-radius:6px;margin-bottom:15px;">
-                <ul style="margin:0; padding-left:20px;">
-                    @foreach ($errors->all() as $error)
+        @if($errors->any())
+            <div class="alert alert-danger" role="alert">
+                <ul style="margin: 0; padding-left: 1.25rem;">
+                    @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
         @endif
 
-        {{-- Tampilkan success message --}}
-        @if (session('success'))
-            <div style="background-color:#d4edda;color:#155724;padding:10px;border-radius:6px;margin-bottom:15px;">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <form method="POST" action="/register">
+        <form method="POST" action="{{ url('/register') }}">
             @csrf
 
-            <label>Nama</label>
-            <input type="text" name="name" required>
+            <div class="form-group">
+                <label for="name" class="form-label form-label-required">Nama Lengkap</label>
+                <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required autofocus autocomplete="name">
+            </div>
 
-            <label>Email:</label>
-            <input type="email" name="email" value="{{ old('email') }}" required>
+            <div class="form-group">
+                <label for="email" class="form-label form-label-required">Alamat Email</label>
+                <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" required autocomplete="email">
+            </div>
 
-            <label>Password:</label>
-            <input type="password" name="password" required>
+            <div class="form-group">
+                <label for="password" class="form-label form-label-required">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required autocomplete="new-password">
+            </div>
 
-            <label>Konfirmasi Password:</label>
-            <input type="password" name="password_confirmation" required>
+            <div class="form-group">
+                <label for="password_confirmation" class="form-label form-label-required">Konfirmasi Password</label>
+                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" required autocomplete="new-password">
+            </div>
 
-            <button type="submit">Daftar</button>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+                Daftar Akun
+            </button>
         </form>
+
+        <div class="auth-footer">
+            Sudah memiliki akun? <a href="{{ route('login') }}">Masuk di sini</a>
+        </div>
     </div>
+</body>
+</html>

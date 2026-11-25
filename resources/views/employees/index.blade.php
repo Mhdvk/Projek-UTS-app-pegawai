@@ -1,58 +1,78 @@
 @extends('master')
+
 @section('title', 'Daftar Pegawai')
+
 @section('content')
-    @vite('resources/css/employee-index.css')
-
-<div class="container mt-5">
-    <h1 class="mb-4">Daftar Pegawai</h1>
-
+<div class="page-header">
+    <h1 class="page-title">Daftar Pegawai</h1>
     @if(auth()->user()?->role === 'admin')
-        <a href="{{ route('employees.create') }}" class="btn-add">+ Tambah Pegawai</a>
+        <div class="page-actions">
+            <a href="{{ route('employees.create') }}" class="btn btn-primary">
+                + Tambah Pegawai
+            </a>
+        </div>
     @endif
+</div>
 
-    <table border="1" cellpadding="5" cellspacing="0" width="100%">
-        <thead style="background-color: #f2f2f2;">
-            <tr style="text-align: center;">
-                <th>Nama Lengkap</th>
-                <th>Email</th>
-                <th>Nomor Telepon</th>
-                <th>Tanggal Lahir</th>
-                <th>Alamat</th>
-                <th>Tanggal Masuk</th>
-                <th>Departemen</th>
-                <th>Posisi</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($employees as $employee)
+<div class="app-card">
+    <div class="table-responsive">
+        <table class="app-table">
+            <thead>
                 <tr>
-                    <td>{{ $employee->nama_lengkap }}</td>
-                    <td>{{ $employee->email }}</td>
-                    <td>{{ $employee->nomor_telepon }}</td>
-                    <td>{{ $employee->tanggal_lahir }}</td>
-                    <td>{{ $employee->alamat }}</td>
-                    <td>{{ $employee->tanggal_masuk }}</td>
-                    <td>{{ $employee->department->nama_departemen ?? '-' }}</td>
-                    <td>{{ $employee->position->nama_jabatan ?? '-' }}</td>
-                    <td>{{ $employee->status }}</td>
-<td class="td-actions">
-    <a href="{{ route('employees.show', $employee->id) }}" class="btn-action btn-detail">Detail</a>
-
-    @if(auth()->user()?->role === 'admin')
-        <a href="{{ route('employees.edit', $employee->id) }}" class="btn-action btn-edit">Edit</a>
-        <form action="{{ route('employees.destroy', $employee->id) }}" method="POST">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn-action btn-delete" onclick="return confirm('Yakin ingin menghapus?')">Delete</button>
-        </form>
-    @endif
-</td>
-
+                    <th>Nama Lengkap</th>
+                    <th>Email</th>
+                    <th>Telepon</th>
+                    <th>Departemen</th>
+                    <th>Jabatan</th>
+                    <th>Tanggal Masuk</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Aksi</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @forelse ($employees as $employee)
+                    <tr>
+                        <td style="font-weight: 600;">{{ $employee->nama_lengkap }}</td>
+                        <td>{{ $employee->email }}</td>
+                        <td>{{ $employee->nomor_telepon }}</td>
+                        <td>{{ $employee->department->nama_departemen ?? '-' }}</td>
+                        <td>{{ $employee->position->nama_jabatan ?? '-' }}</td>
+                        <td>{{ $employee->tanggal_masuk }}</td>
+                        <td>
+                            @if(strtolower($employee->status) === 'aktif')
+                                <span class="badge badge-success">Aktif</span>
+                            @else
+                                <span class="badge badge-danger">Nonaktif</span>
+                            @endif
+                        </td>
+                        <td>
+                            <div class="table-actions" style="justify-content: flex-end;">
+                                <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-sm btn-secondary">
+                                    Detail
+                                </a>
+
+                                @if(auth()->user()?->role === 'admin')
+                                    <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-sm btn-secondary">
+                                        Edit
+                                    </a>
+                                    <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus pegawai ini?')">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="8" class="table-empty">Belum ada data pegawai yang tersimpan.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection

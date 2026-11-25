@@ -3,32 +3,36 @@
 @section('title', 'Data Absensi')
 
 @section('content')
-    @vite('resources/css/attendance-index.css')
-
-    <div class="container">
-        <h1>Data Absensi</h1>
-
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Data Absensi</h1>
+        <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-top: 0.25rem;">
+            Catatan kehadiran pegawai harian
+        </p>
+    </div>
+    <div class="page-actions">
         @if(auth()->user()->role === 'employee')
-            <div class="btn-group">
-                {{-- Check-In --}}
-                <form action="{{ route('attendance.absen-masuk') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-absen">Absen Masuk</button>
-                </form>
-
-                {{-- Check-Out --}}
-                <form action="{{ route('attendance.absen-keluar') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-absen">Absen Keluar</button>
-                </form>
-            </div>
+            <form action="{{ route('attendance.absen-masuk') }}" method="POST" style="display:inline;">
+                @csrf
+                <button type="submit" class="btn btn-primary">Absen Masuk (Check-In)</button>
+            </form>
+            <form action="{{ route('attendance.absen-keluar') }}" method="POST" style="display:inline;">
+                @csrf
+                <button type="submit" class="btn btn-secondary">Absen Keluar (Check-Out)</button>
+            </form>
         @endif
 
         @if(auth()->user()->role === 'admin')
-            <a href="{{ route('attendance.create') }}" class="btn btn-add">+ Tambah Absensi</a>
+            <a href="{{ route('attendance.create') }}" class="btn btn-primary">
+                + Tambah Absensi
+            </a>
         @endif
+    </div>
+</div>
 
-        <table>
+<div class="app-card">
+    <div class="table-responsive">
+        <table class="app-table">
             <thead>
                 <tr>
                     <th>Karyawan</th>
@@ -36,34 +40,60 @@
                     <th>Waktu Masuk</th>
                     <th>Waktu Keluar</th>
                     <th>Status</th>
-                    <th>Aksi</th>
+                    @if(auth()->user()->role === 'admin')
+                        <th style="text-align: right; width: 140px;">Aksi</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
                 @forelse ($attendance as $att)
                     <tr>
-                        <td>{{ $att->employee ? $att->employee->nama_lengkap : '-' }}</td>
+                        <td style="font-weight: 600;">
+                            {{ $att->employee ? $att->employee->nama_lengkap : '-' }}
+                        </td>
                         <td>{{ $att->tanggal }}</td>
-                        <td>{{ $att->waktu_masuk ?? '-' }}</td>
-                        <td>{{ $att->waktu_keluar ?? '-' }}</td>
-                        <td>{{ ucfirst($att->status_absensi ?? '-') }}</td>
-                        <td class="td-actions">
-                            @if(auth()->user()->role === 'admin')
-                                <a href="{{ route('attendance.edit', $att->id) }}" class="btn-action btn-edit">Edit</a>
-                                <form action="{{ route('attendance.destroy', $att->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-action btn-delete" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
-                                </form>
+                        <td style="font-variant-numeric: tabular-nums;">{{ $att->waktu_masuk ?? '-' }}</td>
+                        <td style="font-variant-numeric: tabular-nums;">{{ $att->waktu_keluar ?? '-' }}</td>
+                        <td>
+                            @php
+                                $status = strtolower($att->status_absensi ?? '');
+                            @endphp
+                            @if($status === 'hadir')
+                                <span class="badge badge-success">Hadir</span>
+                            @elseif($status === 'izin' || $status === 'sakit')
+                                <span class="badge badge-warning">{{ ucfirst($status) }}</span>
+                            @elseif($status === 'alpha')
+                                <span class="badge badge-danger">Alpha</span>
+                            @else
+                                <span class="badge badge-neutral">{{ ucfirst($att->status_absensi ?? '-') }}</span>
                             @endif
                         </td>
+                        @if(auth()->user()->role === 'admin')
+                            <td>
+                                <div class="table-actions" style="justify-content: flex-end;">
+                                    <a href="{{ route('attendance.edit', $att->id) }}" class="btn btn-sm btn-secondary">
+                                        Edit
+                                    </a>
+                                    <form action="{{ route('attendance.destroy', $att->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus data absensi ini?')">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        @endif
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" style="text-align:center; padding:15px; color:#666;">Tidak ada data absensi</td>
+                        <td colspan="{{ auth()->user()->role === 'admin' ? 6 : 5 }}" class="table-empty">
+                            Belum ada riwayat absensi.
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
+</div>
 @endsection

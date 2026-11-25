@@ -1,91 +1,93 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('master')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Data Pegawai</title>
-    @vite('resources/css/employee-edit.css')
-</head>
+@section('title', 'Edit Pegawai')
 
-<body>
-    <div class="form-container">
-        <h2>Edit Data Pegawai</h2>
+@section('content')
+<div class="page-header">
+    <h1 class="page-title">Edit Data Pegawai</h1>
+</div>
 
+<div class="app-card form-container">
+    <div class="app-card-body">
         <form action="{{ route('employees.update', $employee->id) }}" method="POST">
             @csrf
             @method('PUT')
 
-            <div class="form-group">
-                <label>Nama Lengkap</label>
-                <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $employee->nama_lengkap) }}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nama_lengkap" class="form-label form-label-required">Nama Lengkap</label>
+                    <input type="text" id="nama_lengkap" name="nama_lengkap" class="form-control" value="{{ old('nama_lengkap', $employee->nama_lengkap) }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label form-label-required">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" value="{{ old('email', $employee->email) }}" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
+                    <input type="text" id="nomor_telepon" name="nomor_telepon" class="form-control" value="{{ old('nomor_telepon', $employee->nomor_telepon) }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
+                    <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control" value="{{ old('tanggal_lahir', $employee->tanggal_lahir) }}">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="tanggal_masuk" class="form-label">Tanggal Masuk</label>
+                    <input type="date" id="tanggal_masuk" name="tanggal_masuk" class="form-control" value="{{ old('tanggal_masuk', $employee->tanggal_masuk) }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="form-label form-label-required">Status</label>
+                    <select id="status" name="status" class="form-control" required>
+                        <option value="aktif" {{ old('status', $employee->status) === 'aktif' ? 'selected' : '' }}>Aktif</option>
+                        <option value="nonaktif" {{ old('status', $employee->status) === 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="departemen_id" class="form-label">Departemen</label>
+                    <select id="departemen_id" name="departemen_id" class="form-control">
+                        <option value="">Pilih Departemen</option>
+                        @foreach ($departments as $dept)
+                            <option value="{{ $dept->id }}" {{ old('departemen_id', $employee->departemen_id) == $dept->id ? 'selected' : '' }}>
+                                {{ $dept->nama_departemen }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="jabatan_id" class="form-label">Jabatan</label>
+                    <select id="jabatan_id" name="jabatan_id" class="form-control">
+                        <option value="">Pilih Jabatan</option>
+                        @foreach ($positions as $pos)
+                            <option value="{{ $pos->id }}" {{ old('jabatan_id', $employee->jabatan_id) == $pos->id ? 'selected' : '' }}>
+                                {{ $pos->nama_jabatan }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
 
             <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="email" value="{{ old('email', $employee->email) }}">
-            </div>
-
-            <div class="form-group">
-                <label>Nomor Telepon</label>
-                <input type="text" name="nomor_telepon" value="{{ old('nomor_telepon', $employee->nomor_telepon) }}">
-            </div>
-
-            <div class="form-group">
-                <label>Tanggal Lahir</label>
-                <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', $employee->tanggal_lahir) }}">
-            </div>
-
-            <div class="form-group">
-                <label>Alamat</label>
-                <textarea name="alamat">{{ old('alamat', $employee->alamat) }}</textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Tanggal Masuk</label>
-                <input type="date" name="tanggal_masuk" value="{{ old('tanggal_masuk', $employee->tanggal_masuk) }}">
-            </div>
-
-            <div class="form-group">
-                <label>Departemen</label>
-                <select name="departemen_id">
-                    @foreach ($departments as $dept)
-                        <option value="{{ $dept->id }}"
-                            {{ $employee->departemen_id == $dept->id ? 'selected' : '' }}>
-                            {{ $dept->nama_departemen }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Posisi</label>
-                <select name="jabatan_id">
-                    @foreach ($positions as $pos)
-                        <option value="{{ $pos->id }}" {{ $employee->jabatan_id == $pos->id ? 'selected' : '' }}>
-                            {{ $pos->nama_jabatan }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Status</label>
-                <select name="status">
-                    <option value="aktif" {{ old('status', $employee->status) == 'aktif' ? 'selected' : '' }}>Aktif
-                    </option>
-                    <option value="nonaktif" {{ old('status', $employee->status) == 'nonaktif' ? 'selected' : '' }}>
-                        Nonaktif</option>
-                </select>
+                <label for="alamat" class="form-label">Alamat</label>
+                <textarea id="alamat" name="alamat" class="form-control">{{ old('alamat', $employee->alamat) }}</textarea>
             </div>
 
             <div class="form-actions">
-                <button type="submit">Update</button>
-                <button type="button" onclick="window.location='{{ route('employees.index') }}'">Kembali</button>
+                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                <a href="{{ route('employees.index') }}" class="btn btn-secondary">Batal</a>
             </div>
-
         </form>
     </div>
-</body>
-
-</html>
+</div>
+@endsection

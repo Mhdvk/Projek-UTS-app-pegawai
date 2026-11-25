@@ -1,113 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Login</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .login-box {
-            background: white;
-            width: 350px;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            outline: none;
-            transition: 0.2s;
-        }
-
-        input:focus {
-            border-color: #6c9bcf;
-            box-shadow: 0 0 4px rgba(108,155,207,0.5);
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background-color: #1665c1;
-        }
-
-        .error-text {
-            color: red;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .register-link {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            text-decoration: none;
-            color: #1a73e8;
-        }
-
-        .register-link:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk - App Pegawai</title>
+    @vite('resources/css/master.css')
 </head>
-
-<body>
-    <div class="login-box">
-        <h2>Login</h2>
+<body class="auth-page">
+    <div class="auth-card">
+        <div class="auth-brand">
+            <h1>App Pegawai</h1>
+            <p>Silakan masuk ke akun Anda</p>
+        </div>
 
         @if(session('error'))
-            <p class="error-text">{{ session('error') }}</p>
+            <div class="alert alert-danger" role="alert">
+                {{ session('error') }}
+            </div>
         @endif
 
-        <form action="/login" method="POST">
+        @if($errors->any())
+            <div class="alert alert-danger" role="alert">
+                <ul style="margin: 0; padding-left: 1.25rem;">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ url('/login') }}" method="POST">
             @csrf
 
-            <label>Email</label>
-            <input type="email" name="email" required>
+            <div class="form-group">
+                <label for="email" class="form-label form-label-required">Alamat Email</label>
+                <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" required autofocus autocomplete="email">
+            </div>
 
-            <label>Password</label>
-            <input type="password" name="password" required>
+            <div class="form-group">
+                <label for="password" class="form-label form-label-required">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required autocomplete="current-password">
+            </div>
 
-            <button type="submit">Masuk</button>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+                Masuk
+            </button>
         </form>
 
-        <!-- LINK REGISTER -->
-        <a href="/register" class="register-link">Belum punya akun? Daftar</a>
+        <div class="auth-footer">
+            Belum memiliki akun? <a href="{{ route('register') }}">Daftar di sini</a>
+        </div>
     </div>
 </body>
 </html>
