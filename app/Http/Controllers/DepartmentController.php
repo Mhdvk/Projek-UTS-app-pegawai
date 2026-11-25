@@ -13,6 +13,13 @@ class DepartmentController extends Controller
         return view('departments.index', compact('departments'));
     }
 
+    public function show($id)
+    {
+        $department = Department::findOrFail($id);
+        return view('departments.show', compact('department'));
+    }
+
+    // ================= Admin Only =================
     public function create()
     {
         return view('departments.create');
@@ -21,13 +28,7 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         Department::create($request->all());
-        return redirect()->route('departments.index');
-    }
-
-    public function show($id)
-    {
-        $department = Department::findOrFail($id);
-        return view('departments.show', compact('department'));
+        return redirect()->route('departments.index')->with('success', 'Departemen berhasil ditambahkan!');
     }
 
     public function edit($id)
@@ -40,12 +41,12 @@ class DepartmentController extends Controller
     {
         $department = Department::findOrFail($id);
         $department->update($request->only(['nama_departemen']));
-        return redirect()->route('departments.index');
+        return redirect()->route('departments.index')->with('success', 'Departemen berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
         Department::findOrFail($id)->delete();
-        return redirect()->route('departments.index');
+        return redirect()->route('departments.index')->with('success', 'Departemen berhasil dihapus!');
     }
 }

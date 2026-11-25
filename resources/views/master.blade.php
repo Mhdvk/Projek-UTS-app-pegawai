@@ -18,6 +18,15 @@
                 <li><a href="{{ url('/attendance') }}">Attendance</a></li>
                 <li><a href="{{ url('/positions') }}">Positions</a></li>
                 <li><a href="{{ url('/salaries') }}">Salaries</a></li>
+
+                <!-- ========== Tambahan Logout ========== -->
+                <li style="float:right;">
+                    <a href="{{ route('logout') }}" 
+                       onclick="return confirm('Yakin ingin logout?')">
+                        Logout
+                    </a>
+                </li>
+                <!-- ===================================== -->
             </ul>
         </nav>
     </header>
@@ -32,3 +41,4 @@
 </body>
 
 </html>
+ 

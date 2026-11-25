@@ -11,6 +11,11 @@ class PositionController extends Controller
         return view('positions.index', compact('positions'));
     }
 
+    public function show(Position $position) {
+        return view('positions.show', compact('position'));
+    }
+
+    // ================= Admin Only =================
     public function create() {
         return view('positions.create');
     }

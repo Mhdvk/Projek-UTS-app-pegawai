@@ -20,7 +20,8 @@ h1 {
     margin-bottom: 25px;
 }
 
-a.btn {
+/* Tombol umum */
+a.btn, button.btn {
     display: inline-block;
     background-color: #7a5af8;
     color: white;
@@ -30,14 +31,23 @@ a.btn {
     font-weight: 600;
     transition: all 0.3s ease;
     margin-bottom: 20px;
+    cursor: pointer;
 }
 
-a.btn:hover {
+a.btn:hover, button.btn:hover {
     background-color: #5d3db3;
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+/* Grup tombol karyawan */
+.btn-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Tabel */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -70,36 +80,33 @@ tbody tr:hover {
     background-color: #f0e8ff;
 }
 
-button {
-    background-color: #7a5af8;
-    color: white;
-    border: none;
-    padding: 6px 12px;
+/* Tombol aksi di tabel */
+td .btn-action {
+    padding: 5px 10px;
     border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     transition: all 0.3s ease;
-}
-
-button:hover {
-    background-color: #5d3db3;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-}
-
-form {
-    display: inline;
-}
-
-td a {
-    color: #7a5af8;
-    text-decoration: none;
-    font-weight: 600;
     margin-right: 5px;
+    text-decoration: none;
 }
 
-td a:hover {
-    text-decoration: underline;
-    color: #5d3db3;
+td .btn-edit {
+    background-color: #f0ad4e;
+    color: white;
+    border: none;
+}
+
+td .btn-edit:hover {
+    background-color: #d9963f;
+}
+
+td .btn-delete {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+}
+
+td .btn-delete:hover {
+    background-color: #c9302c;
 }

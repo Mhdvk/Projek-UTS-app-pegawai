@@ -43,20 +43,27 @@
         }
 
         a {
-            display: block;
-            text-align: center;
-            margin-top: 25px;
-            color: #007bff;
+            display: inline-block;
+            margin: 20px 5px 0 0;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
             text-decoration: none;
+            border-radius: 4px;
         }
 
         a:hover {
-            text-decoration: underline;
+            background-color: #0056b3;
         }
 
         .total-gaji {
             font-weight: bold;
             background-color: #f0f8ff;
+        }
+
+        .action-buttons {
+            text-align: center;
+            margin-top: 25px;
         }
     </style>
 </head>
@@ -122,7 +129,21 @@
         </tr>
     </table>
 
-    <a href="{{ route('employees.index') }}">← Kembali ke Daftar Pegawai</a>
+    <div class="action-buttons">
+        {{-- Semua bisa kembali ke list --}}
+        <a href="{{ route('employees.index') }}">← Kembali ke Daftar Pegawai</a>
+
+        {{-- Tombol CRUD hanya muncul untuk admin --}}
+        @if(Auth::user()->role === 'admin')
+            <a href="{{ route('employees.edit', $employee->id) }}">Edit</a>
+
+            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" style="display:inline-block;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" style="padding:8px 12px; background:#dc3545; color:white; border:none; border-radius:4px; cursor:pointer;">Hapus</button>
+            </form>
+        @endif
+    </div>
 </body>
 
 </html>

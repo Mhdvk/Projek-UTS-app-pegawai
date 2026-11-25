@@ -22,4 +22,11 @@ class Attendance extends Model
     {
         return $this->belongsTo(Employee::class, 'karyawan_id');
     }
+    public static function checkStatus($waktuMasuk) {
+    $jamMasuk = \Carbon\Carbon::createFromTime(7, 0, 0); // jam 07:00
+    $waktuMasuk = \Carbon\Carbon::parse($waktuMasuk);
+
+    return $waktuMasuk->gt($jamMasuk->addMinutes(15)) ? 'Alpha' : 'Hadir';
+}
+
 }
